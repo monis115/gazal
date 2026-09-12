@@ -144,6 +144,39 @@
   .ico.main:hover{ background:linear-gradient(160deg,#f2c469,#b07f22); color:#140c04 }
   .ico.main svg{ width:18px; height:18px }
 
+  /* ---------- volume ---------- */
+  .vol{ display:none; align-items:center; gap:7px; flex-shrink:0; padding-left:4px }
+  @media (min-width:640px){ .vol{ display:flex } }
+  .vol svg{ width:14px; height:14px; fill:rgba(243,233,218,.55); flex-shrink:0 }
+  .vol input[type=range]{
+    -webkit-appearance:none; appearance:none; width:62px; height:4px; border-radius:999px;
+    background:linear-gradient(90deg,var(--gold) 0%,var(--gold) var(--pct,80%),rgba(243,233,218,.18) var(--pct,80%));
+    cursor:pointer; outline:none;
+  }
+  .vol input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:11px; height:11px; border-radius:50%;
+    background:#f3e9da; box-shadow:0 0 8px rgba(217,164,65,.7); cursor:pointer;
+  }
+  .vol input[type=range]::-moz-range-thumb{
+    width:11px; height:11px; border:0; border-radius:50%; background:#f3e9da; box-shadow:0 0 8px rgba(217,164,65,.7);
+  }
+  .vol input[type=range]:focus-visible{ outline:2px solid var(--gold); outline-offset:3px }
+
+  /* ---------- the room breathes while a ghazal plays ---------- */
+  #stageGlow{
+    position:absolute; inset:0; z-index:10; pointer-events:none; opacity:0;
+    transition:opacity 1.6s ease;
+    background:radial-gradient(ellipse 52% 42% at 50% 62%, rgba(232,169,78,.26) 0%, rgba(122,31,61,.1) 48%, transparent 74%);
+  }
+  body.is-playing #stageGlow{ opacity:1; animation:breathe 7s ease-in-out infinite }
+  @keyframes breathe{ 0%,100%{ opacity:.72 } 50%{ opacity:1 } }
+  body.is-playing .flicker{ animation-duration:2.4s }
+  body.is-playing .flicker2{ animation-duration:1.9s }
+
+  /* the sher is tappable */
+  #sherBox{ cursor:pointer; border-radius:16px; padding:6px 10px; transition:background .3s }
+  #sherBox:hover{ background:rgba(217,164,65,.06) }
+
   /* ---------- wah wah ---------- */
   .wah{ position:fixed; pointer-events:none; z-index:40; font-weight:700; color:var(--gold);
         text-shadow:0 2px 20px rgba(217,164,65,.7); animation:wahUp 2.2s ease-out forwards }
@@ -206,7 +239,194 @@
       })();
     </script>
 
-    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" class="w-full h-full object-cover" role="img"
+    <!-- portrait scene: the landscape one slices down to a single arch on a phone,
+         so narrow screens get their own composition instead of a cropped strip -->
+    <svg viewBox="0 0 440 900" preserveAspectRatio="xMidYMid slice" class="block sm:hidden w-full h-full object-cover" role="img"
+         aria-label="Illustration of a moonlit arch, lanterns, a harmonium and tabla set for a ghazal gathering">
+      <defs>
+        <linearGradient id="skyM" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#070511"/>
+          <stop offset="34%"  stop-color="#150e28"/>
+          <stop offset="64%"  stop-color="#2a1638"/>
+          <stop offset="100%" stop-color="#4a2338"/>
+        </linearGradient>
+        <radialGradient id="moonHaloM" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#f6ead0" stop-opacity=".7"/>
+          <stop offset="35%"  stop-color="#d9c79a" stop-opacity=".18"/>
+          <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="lampGlowM" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#ffc46b" stop-opacity=".85"/>
+          <stop offset="45%"  stop-color="#d97c29" stop-opacity=".28"/>
+          <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="innerRoomM" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#e8a94e" stop-opacity=".55"/>
+          <stop offset="55%"  stop-color="#b1652a" stop-opacity=".38"/>
+          <stop offset="100%" stop-color="#3a1a1e" stop-opacity=".8"/>
+        </linearGradient>
+        <linearGradient id="facadeM" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#1b1024"/>
+          <stop offset="100%" stop-color="#0d0817"/>
+        </linearGradient>
+        <linearGradient id="floorM" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#4a3040"/>
+          <stop offset="100%" stop-color="#140d1c"/>
+        </linearGradient>
+        <linearGradient id="sheetM" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#e7dcc6" stop-opacity=".92"/>
+          <stop offset="100%" stop-color="#8d7f6a" stop-opacity=".55"/>
+        </linearGradient>
+        <linearGradient id="drapeM" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stop-color="#5c142c"/>
+          <stop offset="70%"  stop-color="#3a0d1d"/>
+          <stop offset="100%" stop-color="#1a0710" stop-opacity=".2"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="440" height="900" fill="url(#skyM)"/>
+
+      <g fill="#f6ead0">
+        <circle cx="40"  cy="70"  r="1.5" opacity=".75"/><circle cx="110" cy="140" r="1.1" opacity=".5"/>
+        <circle cx="175" cy="52"  r="1.7" opacity=".7"/><circle cx="245" cy="180" r="1.2" opacity=".5"/>
+        <circle cx="70"  cy="230" r="1.3" opacity=".55"/><circle cx="300" cy="86" r="1"  opacity=".45"/>
+        <circle cx="410" cy="260" r="1.4" opacity=".6"/><circle cx="150" cy="300" r="1.1" opacity=".4"/>
+        <circle cx="360" cy="330" r="1.2" opacity=".45"/><circle cx="20" cy="380" r="1"  opacity=".35"/>
+      </g>
+
+      <circle cx="376" cy="92" r="112" fill="url(#moonHaloM)"/>
+      <circle cx="376" cy="92" r="38"  fill="#f4e6c4"/>
+      <circle cx="365" cy="83" r="7"   fill="#e2d0a8" opacity=".55"/>
+      <circle cx="387" cy="103" r="5"  fill="#e2d0a8" opacity=".45"/>
+
+      <!-- distant town -->
+      <g fill="#0b0716" opacity=".95">
+        <rect x="0" y="418" width="440" height="80"/>
+        <rect x="18" y="374" width="70" height="50"/><rect x="38" y="356" width="12" height="22"/>
+        <path d="M110,418 C110,378 132,358 154,358 C176,358 198,378 198,418 Z"/>
+        <rect x="150" y="330" width="9" height="30" rx="4"/>
+        <rect x="92"  y="366" width="14" height="56" rx="5"/><path d="M92,366 C92,352 106,352 106,366 Z"/>
+        <rect x="202" y="366" width="14" height="56" rx="5"/><path d="M202,366 C202,352 216,352 216,366 Z"/>
+        <rect x="252" y="384" width="80" height="40"/><rect x="272" y="368" width="10" height="18"/>
+        <path d="M356,418 C356,388 376,372 396,372 C416,372 440,388 440,418 Z"/>
+      </g>
+
+      <!-- facade -->
+      <rect x="10" y="300" width="420" height="410" fill="url(#facadeM)"/>
+      <rect x="0" y="288" width="440" height="22" rx="5" fill="#150d20"/>
+      <g fill="#150d20">
+        <rect x="16"  y="268" width="22" height="22" rx="4"/><rect x="76"  y="268" width="22" height="22" rx="4"/>
+        <rect x="136" y="268" width="22" height="22" rx="4"/><rect x="196" y="268" width="22" height="22" rx="4"/>
+        <rect x="256" y="268" width="22" height="22" rx="4"/><rect x="316" y="268" width="22" height="22" rx="4"/>
+        <rect x="376" y="268" width="22" height="22" rx="4"/>
+      </g>
+
+      <!-- the one big arch -->
+      <g transform="translate(120,710)">
+        <path id="archM" d="M0,0 L0,-200 C0,-310 40,-366 100,-379 C160,-366 200,-310 200,-200 L200,0 Z" fill="url(#innerRoomM)"/>
+        <use href="#archM" fill="none" stroke="#4a2c4c" stroke-width="10"/>
+        <path d="M22,-200 C22,-296 58,-344 100,-355 C142,-344 178,-296 178,-200"
+              fill="none" stroke="#d9a441" stroke-width="2.5" opacity=".45"/>
+        <g fill="#1d0f1c" opacity=".85">
+          <circle cx="100" cy="-120" r="25"/>
+          <path d="M58,-32 C58,-84 79,-102 100,-102 C121,-102 142,-84 142,-32 Z"/>
+        </g>
+      </g>
+
+      <!-- jharokha windows either side -->
+      <g fill="#2a1220" stroke="#33203a" stroke-width="5">
+        <rect x="26"  y="470" width="72" height="120" rx="36"/>
+        <rect x="342" y="470" width="72" height="120" rx="36"/>
+      </g>
+      <g fill="#e8a94e" opacity=".3">
+        <rect x="34"  y="478" width="56" height="104" rx="28"/>
+        <rect x="350" y="478" width="56" height="104" rx="28"/>
+      </g>
+      <g stroke="#1b1024" stroke-width="3.5" opacity=".85">
+        <line x1="62" y1="480" x2="62" y2="580"/><line x1="30" y1="512" x2="94" y2="512"/><line x1="30" y1="548" x2="94" y2="548"/>
+        <line x1="378" y1="480" x2="378" y2="580"/><line x1="346" y1="512" x2="410" y2="512"/><line x1="346" y1="548" x2="410" y2="548"/>
+      </g>
+
+      <!-- lanterns -->
+      <g class="flicker">
+        <line x1="62" y1="300" x2="62" y2="352" stroke="#3a2440" stroke-width="2.5"/>
+        <circle cx="62" cy="392" r="56" fill="url(#lampGlowM)"/>
+        <path d="M62,346 C73,346 79,352 79,357 L45,357 C45,352 51,346 62,346 Z" fill="#3a2418" stroke="#d9a441" stroke-width="1.8"/>
+        <path d="M45,357 L79,357 L84,388 C84,398 73,404 62,404 C51,404 40,398 40,388 Z" fill="#2a1a12" stroke="#d9a441" stroke-width="2.2"/>
+        <circle cx="62" cy="379" r="8" fill="#ffd694"/>
+        <path d="M62,404 L62,415 M57,415 L67,415" stroke="#d9a441" stroke-width="2.2"/>
+      </g>
+      <g class="flicker2">
+        <line x1="378" y1="300" x2="378" y2="336" stroke="#3a2440" stroke-width="2.5"/>
+        <circle cx="378" cy="374" r="50" fill="url(#lampGlowM)"/>
+        <path d="M378,330 C388,330 394,336 394,341 L362,341 C362,336 368,330 378,330 Z" fill="#3a2418" stroke="#d9a441" stroke-width="1.8"/>
+        <path d="M362,341 L394,341 L398,370 C398,379 388,385 378,385 C368,385 358,379 358,370 Z" fill="#2a1a12" stroke="#d9a441" stroke-width="2.2"/>
+        <circle cx="378" cy="362" r="7" fill="#ffd694"/>
+        <path d="M378,385 L378,395 M373,395 L383,395" stroke="#d9a441" stroke-width="2.2"/>
+      </g>
+
+      <!-- floor and chandni -->
+      <rect x="0" y="706" width="440" height="194" fill="url(#floorM)"/>
+      <line x1="0" y1="706" x2="440" y2="706" stroke="#3a2440" stroke-width="3"/>
+      <ellipse cx="220" cy="828" rx="230" ry="72" fill="#d97c29" opacity=".14"/>
+      <path d="M-30,900 L40,716 L400,716 L470,900 Z" fill="url(#sheetM)" opacity=".8"/>
+      <path d="M-30,900 L40,716 L400,716 L470,900 Z" fill="none" stroke="#f3e9da" stroke-width="2" opacity=".4"/>
+
+      <!-- bolsters flanking the arch -->
+      <rect x="52"  y="734" width="96" height="22" rx="11" fill="#7a1f3d"/>
+      <rect x="52"  y="734" width="96" height="9"  rx="5"  fill="#a83a5c" opacity=".7"/>
+      <rect x="292" y="734" width="96" height="22" rx="11" fill="#7a1f3d"/>
+      <rect x="292" y="734" width="96" height="9"  rx="5"  fill="#a83a5c" opacity=".7"/>
+
+      <!-- harmonium, bottom left -->
+      <g transform="translate(6,798)">
+        <rect x="0" y="14" width="120" height="42" rx="5" fill="#2b1a12" stroke="#d9a441" stroke-width="1.8"/>
+        <rect x="7" y="7"  width="106" height="11" rx="3" fill="#3a2418"/>
+        <g fill="#e9dcc4">
+          <rect x="12" y="19" width="7" height="16" rx="1.2"/><rect x="22" y="19" width="7" height="16" rx="1.2"/>
+          <rect x="32" y="19" width="7" height="16" rx="1.2"/><rect x="42" y="19" width="7" height="16" rx="1.2"/>
+          <rect x="52" y="19" width="7" height="16" rx="1.2"/><rect x="62" y="19" width="7" height="16" rx="1.2"/>
+          <rect x="72" y="19" width="7" height="16" rx="1.2"/><rect x="82" y="19" width="7" height="16" rx="1.2"/>
+          <rect x="92" y="19" width="7" height="16" rx="1.2"/><rect x="102" y="19" width="7" height="16" rx="1.2"/>
+        </g>
+        <g fill="#1a0f0a">
+          <rect x="17" y="19" width="5" height="10"/><rect x="27" y="19" width="5" height="10"/>
+          <rect x="47" y="19" width="5" height="10"/><rect x="57" y="19" width="5" height="10"/>
+          <rect x="67" y="19" width="5" height="10"/><rect x="87" y="19" width="5" height="10"/>
+          <rect x="97" y="19" width="5" height="10"/>
+        </g>
+      </g>
+
+      <!-- tabla, bottom right -->
+      <g transform="translate(300,804)">
+        <ellipse cx="22" cy="52" rx="25" ry="7" fill="#000" opacity=".4"/>
+        <path d="M5,50 L8,20 L37,20 L40,50 Z" fill="#3a2418" stroke="#d9a441" stroke-width="1.4"/>
+        <ellipse cx="22" cy="20" rx="14" ry="5" fill="#e9dcc4"/><ellipse cx="22" cy="20" rx="6" ry="2.2" fill="#1a1210"/>
+        <ellipse cx="74" cy="52" rx="29" ry="8" fill="#000" opacity=".4"/>
+        <path d="M52,50 L54,24 L94,24 L96,50 Z" fill="#5a5f66" stroke="#c9cdd4" stroke-width="1.4"/>
+        <ellipse cx="74" cy="24" rx="21" ry="7" fill="#e9dcc4"/><ellipse cx="74" cy="24" rx="8" ry="2.8" fill="#1a1210"/>
+      </g>
+
+      <!-- shama on each side of the arch -->
+      <g transform="translate(24,716)">
+        <ellipse cx="0" cy="58" rx="18" ry="5" fill="#000" opacity=".35"/>
+        <rect x="-7" y="24" width="14" height="34" rx="3" fill="#e7dcc6" opacity=".88"/>
+        <circle cx="0" cy="10" r="32" fill="url(#lampGlowM)" class="flicker"/>
+        <path d="M0,5 C5,13 4,21 0,23 C-4,21 -5,13 0,5 Z" fill="#ffd694" class="flicker"/>
+      </g>
+      <g transform="translate(416,720)">
+        <ellipse cx="0" cy="58" rx="18" ry="5" fill="#000" opacity=".35"/>
+        <rect x="-7" y="24" width="14" height="34" rx="3" fill="#e7dcc6" opacity=".88"/>
+        <circle cx="0" cy="10" r="32" fill="url(#lampGlowM)" class="flicker2"/>
+        <path d="M0,5 C5,13 4,21 0,23 C-4,21 -5,13 0,5 Z" fill="#ffd694" class="flicker2"/>
+      </g>
+
+      <!-- drapes -->
+      <path d="M0,250 L46,250 C36,430 42,650 22,900 L0,900 Z" fill="url(#drapeM)" opacity=".85"/>
+      <path d="M440,250 L394,250 C404,430 398,650 418,900 L440,900 Z" fill="url(#drapeM)" opacity=".85" transform="scale(-1,1) translate(-880,0)"/>
+    </svg>
+
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" class="hidden sm:block w-full h-full object-cover" role="img"
          aria-label="Illustration of a moonlit haveli courtyard with arches, lanterns, a harmonium and tabla set for a ghazal gathering">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -440,6 +660,8 @@
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_75%_60%_at_50%_45%,transparent_0%,rgba(5,3,10,.62)_100%)]"></div>
   </div>
 
+  <div id="stageGlow" aria-hidden="true"></div>
+
   <canvas id="fxCanvas"></canvas>
   <div id="flash"></div>
   <div id="warmWash"></div>
@@ -478,7 +700,7 @@
 
     <!-- rotating sher -->
     <div class="pointer-events-none w-full max-w-2xl text-center px-2 min-h-[96px] sm:min-h-[112px] flex items-center justify-center">
-      <blockquote id="sherBox" class="sher">
+      <blockquote id="sherBox" class="sher pointer-events-auto" tabindex="0" role="button" aria-label="अगला शेर">
         <p id="sherLine" class="f-serif italic text-lg xs:text-xl sm:text-2xl md:text-3xl leading-snug text-[#f3e9da]/90 drop-shadow-[0_4px_20px_rgba(0,0,0,.9)]"></p>
         <footer id="sherBy" class="f-deva mt-2.5 text-sm sm:text-base text-[#d9a441]/80"></footer>
       </blockquote>
@@ -494,10 +716,21 @@
         <button id="fxDrone"   type="button" aria-pressed="false" class="pill"><span aria-hidden="true">🎵</span> तानपूरा</button>
       </div>
 
-      <!-- wah wah -->
-      <button id="wahBtn" type="button" class="pointer-events-auto pill" style="height:38px;padding:0 22px;font-size:12.5px">
-        <span aria-hidden="true">👏</span> वाह वाह
-      </button>
+      <!-- wah wah + sleep timer -->
+      <div class="pointer-events-auto flex items-center justify-center gap-2">
+        <button id="wahBtn" type="button" class="pill" style="height:38px;padding:0 22px;font-size:12.5px">
+          <span aria-hidden="true">👏</span> वाह वाह
+        </button>
+        <div class="sel-wrap">
+          <select id="sleepSelect" class="pill" style="height:38px;font-size:12.5px" aria-label="महफ़िल कब तक चले">
+            <option value="0">😴 कब तक</option>
+            <option value="20">20 मिनट</option>
+            <option value="45">45 मिनट</option>
+            <option value="90">90 मिनट</option>
+          </select>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
 
       <!-- player -->
       <section class="mehfil-player pointer-events-auto" aria-label="Ghazal station player">
@@ -528,10 +761,14 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 4 9 8-9 8V4Z"/><rect x="17.6" y="4" width="2.4" height="16" rx="1"/></svg>
           </button>
         </div>
+        <div class="vol">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4Zm-2.5-8.7v2.1a7 7 0 0 1 0 13.2v2.1a9 9 0 0 0 0-17.4Z"/></svg>
+          <input id="volume" type="range" min="0" max="100" value="80" aria-label="आवाज़">
+        </div>
       </section>
 
       <p class="text-[10px] sm:text-[11px] text-[#f3e9da]/55 text-center px-4 py-1.5 rounded-full bg-[#0a0713]/55 backdrop-blur-sm">
-        आवाज़ चालू कीजिए · हेडफ़ोन पर सुनिए · आप <span id="liveCount">अभी</span> से महफ़िल में हैं
+        <span class="sm:hidden">🔊 आवाज़ चालू कीजिए</span><span class="hidden sm:inline">आवाज़ चालू कीजिए · हेडफ़ोन पर सुनिए · आप <span id="liveCount">अभी</span> से महफ़िल में हैं</span>
       </p>
     </div>
 
@@ -652,8 +889,19 @@ const SHERS = [
     box.classList.remove('show');
     setTimeout(paint, 1500);
   }
+
+  let timer = setInterval(cycle, 11000);
+  function bump(){
+    clearInterval(timer);
+    cycle();
+    timer = setInterval(cycle, 11000);
+  }
+  box.addEventListener('click', bump);
+  box.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.code === 'Space'){ e.preventDefault(); bump(); }
+  });
+
   paint();
-  setInterval(cycle, 11000);
 })();
 
 
@@ -1274,6 +1522,7 @@ function paintPlay(on){
     : '<path d="M8 5v14l11-7-11-7Z"/>';
   $('playBtn').setAttribute('aria-label', on ? 'Pause' : 'Play');
   $('disc').classList.toggle('spin', on);
+  document.body.classList.toggle('is-playing', on);
 }
 
 function startTick(){
@@ -1348,7 +1597,76 @@ document.addEventListener('keydown', e => {
 
 
 /* =========================================================================
-   8. HOW LONG YOU'VE BEEN IN THE MEHFIL
+   8. VOLUME
+   ========================================================================= */
+(function volume(){
+  const el = $('volume');
+  function apply(){
+    const v = Number(el.value);
+    el.style.setProperty('--pct', v + '%');
+    if (yt && typeof yt.setVolume === 'function') yt.setVolume(v);
+    try { localStorage.setItem('mehfil_vol', String(v)); } catch(e){}
+  }
+  try {
+    const saved = localStorage.getItem('mehfil_vol');
+    if (saved !== null) el.value = saved;
+  } catch(e){}
+  apply();
+  el.addEventListener('input', apply);
+  // the player resets to 100 when it becomes ready, so re-apply once it exists
+  const settle = setInterval(() => {
+    if (yt && typeof yt.setVolume === 'function'){ apply(); clearInterval(settle); }
+  }, 500);
+  setTimeout(() => clearInterval(settle), 20000);
+})();
+
+
+/* =========================================================================
+   9. SLEEP TIMER — the mehfil winds down on its own
+   ========================================================================= */
+(function sleepTimer(){
+  const sel = $('sleepSelect');
+  const first = sel.options[0];
+  let endsAt = null, ticker = null;
+
+  function clear(){
+    clearInterval(ticker); ticker = null; endsAt = null;
+    first.textContent = '😴 कब तक';
+    sel.value = '0';
+    sel.classList.remove('on');
+  }
+
+  function finish(){
+    clear();
+    if (yt && typeof yt.pauseVideo === 'function') yt.pauseVideo();
+    Ambience.set(Ambience.current());          // toggling the live mode turns it off
+    if (Tanpura.isOn()) Tanpura.toggle();
+    document.querySelectorAll('#fxRain,#fxShama,#fxChandni,#fxDrone')
+      .forEach(b => { b.classList.remove('on'); b.setAttribute('aria-pressed','false'); });
+    $('nowTitle').textContent = 'महफ़िल बरख़ास्त — शब बख़ैर';
+  }
+
+  function tick(){
+    const left = Math.ceil((endsAt - Date.now()) / 60000);
+    if (left <= 0){ finish(); return; }
+    first.textContent = '😴 ' + left + ' मिनट';
+  }
+
+  sel.addEventListener('change', () => {
+    const mins = Number(sel.value);
+    clearInterval(ticker);
+    if (!mins){ clear(); return; }
+    endsAt = Date.now() + mins * 60000;
+    sel.classList.add('on');
+    tick();
+    sel.value = '0';
+    ticker = setInterval(tick, 20000);
+  });
+})();
+
+
+/* =========================================================================
+   10. HOW LONG YOU'VE BEEN IN THE MEHFIL
    ========================================================================= */
 (function sitTimer(){
   const el = $('liveCount');

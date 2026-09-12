@@ -41,6 +41,18 @@ strings tuned around C# are plucked in a 1.15s cycle through a feedback delay.
 **वाह वाह** throws mehfil appreciation across the screen and plays a short
 crowd murmur.
 
+**कब तक** is a sleep timer. Pick 20, 45 or 90 minutes and the mehfil winds
+itself down: playback pauses, the ambience clears and the drone fades. The pill
+counts down while it runs.
+
+**Phones get their own scene.** The landscape courtyard slices down to a single
+cropped arch on a narrow screen, so there is a second portrait SVG with its own
+composition. Tailwind's `sm` breakpoint swaps between them.
+
+**The room reacts.** While a ghazal plays, a warm glow swells behind the arches
+on a seven second cycle and the lanterns flicker faster. Tap the couplet to pull
+the next one.
+
 **The player** is the YouTube IFrame API with the video hidden offscreen. Four
 ghazal stations, shuffled on load, auto-advancing. The spinning disc shows the
 current video's thumbnail behind a shellac-groove overlay.
@@ -62,6 +74,9 @@ are the `USTAAD` and `FAQ` arrays just below it.
     Space   play / pause
     n / p   next / previous ghazal
     ← / →   seek 10s, when the progress bar has focus
+
+Volume lives in the player on screens 640px and wider. Phones use their own
+hardware keys, so it is hidden there. The level is remembered in localStorage.
 
 ## Notes
 
