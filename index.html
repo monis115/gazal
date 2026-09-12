@@ -148,19 +148,20 @@
   .vol{ display:none; align-items:center; gap:7px; flex-shrink:0; padding-left:4px }
   @media (min-width:640px){ .vol{ display:flex } }
   .vol svg{ width:14px; height:14px; fill:rgba(243,233,218,.55); flex-shrink:0 }
-  .vol input[type=range]{
+  .rng{
     -webkit-appearance:none; appearance:none; width:62px; height:4px; border-radius:999px;
     background:linear-gradient(90deg,var(--gold) 0%,var(--gold) var(--pct,80%),rgba(243,233,218,.18) var(--pct,80%));
     cursor:pointer; outline:none;
   }
-  .vol input[type=range]::-webkit-slider-thumb{
+  .rng.wide{ width:100%; max-width:190px }
+  .rng::-webkit-slider-thumb{
     -webkit-appearance:none; width:11px; height:11px; border-radius:50%;
     background:#f3e9da; box-shadow:0 0 8px rgba(217,164,65,.7); cursor:pointer;
   }
-  .vol input[type=range]::-moz-range-thumb{
+  .rng::-moz-range-thumb{
     width:11px; height:11px; border:0; border-radius:50%; background:#f3e9da; box-shadow:0 0 8px rgba(217,164,65,.7);
   }
-  .vol input[type=range]:focus-visible{ outline:2px solid var(--gold); outline-offset:3px }
+  .rng:focus-visible{ outline:2px solid var(--gold); outline-offset:3px }
 
   /* ---------- the room breathes while a ghazal plays ---------- */
   #stageGlow{
@@ -198,6 +199,149 @@
   .flicker{ animation:flick 3.7s ease-in-out infinite }
   .flicker2{ animation:flick 2.9s ease-in-out infinite .6s }
   @keyframes flick{ 0%,100%{ opacity:.85 } 42%{ opacity:1 } 55%{ opacity:.62 } 70%{ opacity:.94 } }
+
+  /* ---------- the eq that breathes with the ghazal ---------- */
+  .eq{ display:inline-flex; align-items:flex-end; gap:2px; height:9px; margin-right:7px; vertical-align:-1px }
+  .eq i{
+    display:block; width:2px; height:9px; border-radius:1px; background:var(--gold);
+    transform:scaleY(.2); transform-origin:50% 100%; opacity:.35;
+    transition:opacity .6s ease; animation:eqJump .9s ease-in-out infinite; animation-play-state:paused;
+  }
+  .eq i:nth-child(2){ animation-duration:1.24s; animation-delay:-.35s }
+  .eq i:nth-child(3){ animation-duration:.72s;  animation-delay:-.6s }
+  .eq i:nth-child(4){ animation-duration:1.06s; animation-delay:-.15s }
+  .eq i:nth-child(5){ animation-duration:.84s;  animation-delay:-.5s }
+  body.is-playing .eq i{ animation-play-state:running; opacity:.95 }
+  @keyframes eqJump{ 0%,100%{ transform:scaleY(.2) } 50%{ transform:scaleY(1) } }
+
+  /* sound rings leaving the record */
+  .disc-frame::before,.disc-frame::after{
+    content:''; position:absolute; inset:-1px; border-radius:50%; pointer-events:none;
+    border:1px solid rgba(217,164,65,.5); opacity:0;
+  }
+  body.is-playing .disc-frame::before{ animation:ripple 3.4s ease-out infinite }
+  body.is-playing .disc-frame::after { animation:ripple 3.4s ease-out infinite 1.7s }
+  @keyframes ripple{ 0%{ transform:scale(1); opacity:.6 } 100%{ transform:scale(2); opacity:0 } }
+
+  /* ---------- sargam drifting up while a ghazal plays ---------- */
+  #swarField{ position:fixed; inset:0; z-index:16; pointer-events:none; overflow:hidden }
+  .swar{
+    position:absolute; bottom:-7vh; font-family:'Rozha One',serif; color:rgba(217,164,65,.6);
+    text-shadow:0 0 22px rgba(217,164,65,.45); will-change:transform,opacity;
+    animation:swarRise var(--dur,11s) cubic-bezier(.33,0,.5,1) forwards;
+  }
+  @keyframes swarRise{
+    0%{   opacity:0;   transform:translate3d(0,0,0) rotate(0deg) scale(.7) }
+    14%{  opacity:.78 }
+    72%{  opacity:.4 }
+    100%{ opacity:0;   transform:translate3d(var(--dx,0px),-92vh,0) rotate(var(--rot,0deg)) scale(1.04) }
+  }
+
+  /* ---------- sections ease in as you scroll ---------- */
+  [data-reveal]{ opacity:0; transform:translateY(24px) }
+  [data-reveal].in{
+    opacity:1; transform:none;
+    transition:opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1);
+  }
+
+  /* ---------- saaz: the instruments ---------- */
+  .saaz-halo{
+    position:absolute; inset:-25% -12%; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse 36% 36% at 20% 26%, rgba(122,31,61,.30), transparent 70%),
+      radial-gradient(ellipse 34% 34% at 82% 74%, rgba(217,164,65,.13), transparent 70%);
+    animation:haloDrift 24s ease-in-out infinite alternate;
+  }
+  @keyframes haloDrift{
+    from{ transform:translate3d(-2%,2%,0) scale(1) }
+    to  { transform:translate3d(3%,-3%,0) scale(1.1) }
+  }
+
+  .panel{
+    position:relative; border-radius:24px; padding:16px;
+    border:1px solid rgba(217,164,65,.18); background:rgba(20,13,36,.62);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:0 22px 50px rgba(0,0,0,.5);
+    transition:border-color .45s ease, box-shadow .45s ease;
+  }
+  .panel:hover{ border-color:rgba(217,164,65,.4); box-shadow:0 26px 60px rgba(0,0,0,.62) }
+  @media (min-width:640px){ .panel{ padding:22px } }
+
+  /* harmonium */
+  .harmo{
+    border-radius:16px; padding:10px 10px 12px;
+    background:linear-gradient(180deg,#3a2418,#1d1109 62%,#120a05);
+    border:1px solid rgba(217,164,65,.45);
+    box-shadow:inset 0 2px 0 rgba(255,224,170,.16), 0 18px 40px rgba(0,0,0,.6);
+  }
+  .harmo-grille{
+    height:15px; margin-bottom:11px; border-radius:7px;
+    background:repeating-linear-gradient(90deg, rgba(217,164,65,.32) 0 2px, rgba(0,0,0,.45) 2px 7px);
+    box-shadow:inset 0 1px 4px rgba(0,0,0,.85);
+  }
+  .keys{ position:relative; display:flex; height:112px; user-select:none; touch-action:none }
+  @media (min-width:640px){ .keys{ height:140px } }
+  .wkey{
+    position:relative; flex:1 1 0; min-width:0; padding:0 0 9px; border:0; cursor:pointer;
+    border-radius:0 0 8px 8px;
+    background:linear-gradient(180deg,#fbf5e8 0%,#efe6d3 62%,#dccfb6 100%);
+    box-shadow:inset -1px 0 0 rgba(0,0,0,.2), inset 0 -9px 14px rgba(0,0,0,.08), 0 4px 0 #8f836f;
+    display:flex; align-items:flex-end; justify-content:center;
+    font-family:'Rozha One',serif; font-size:14px; color:#6a5a43;
+    transition:transform .08s ease, box-shadow .08s ease, background .25s ease, color .25s ease;
+  }
+  .wkey:last-child{ box-shadow:inset 0 -9px 14px rgba(0,0,0,.08), 0 4px 0 #8f836f }
+  .wkey.down{
+    transform:translateY(4px); box-shadow:inset 0 -9px 16px rgba(0,0,0,.15), 0 0 0 #8f836f;
+    background:linear-gradient(180deg,#ffeec4,#e8d6ab); color:#4a3a20;
+  }
+  .bkey{
+    position:absolute; top:0; z-index:2; width:8%; margin-left:-4%; height:62%;
+    border:0; padding:0 0 6px; cursor:pointer; border-radius:0 0 5px 5px;
+    background:linear-gradient(180deg,#3a2a20 0%,#1a110a 70%,#0b0704 100%);
+    box-shadow:0 4px 0 #000, 0 6px 10px rgba(0,0,0,.6);
+    display:flex; align-items:flex-end; justify-content:center;
+    font-family:'Rozha One',serif; font-size:9px; color:rgba(243,233,218,.42);
+    transition:transform .08s ease, box-shadow .08s ease, background .25s ease, color .25s ease;
+  }
+  .bkey.down{
+    transform:translateY(3px); box-shadow:0 1px 0 #000;
+    background:linear-gradient(180deg,#7a5a2a,#3a2810); color:#f7e3b8;
+  }
+  .wkey:focus-visible,.bkey:focus-visible,.bol:focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
+
+  /* tabla */
+  .bol{
+    position:relative; width:100%; aspect-ratio:1/1; border-radius:50%; cursor:pointer; overflow:hidden;
+    border:3px solid #3a2418; padding:0;
+    background:radial-gradient(circle at 46% 34%, #f6eedd 0%, #e2d6bd 46%, #b9a98c 78%, #8d7d62 100%);
+    box-shadow:0 10px 22px rgba(0,0,0,.55), inset 0 -6px 14px rgba(0,0,0,.22);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .14s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .bol:hover{ border-color:var(--gold); box-shadow:0 12px 26px rgba(0,0,0,.6), 0 0 22px rgba(217,164,65,.25) }
+  .bol.tap{ transform:scale(.92) }
+  .bol .syahi{
+    position:absolute; width:46%; height:46%; border-radius:50%;
+    background:radial-gradient(circle at 42% 36%, #4a423c, #16120f 70%);
+    box-shadow:inset 0 2px 5px rgba(255,255,255,.14);
+  }
+  .bol .lbl{
+    position:relative; z-index:2; font-family:'Rozha One',serif; font-size:15px;
+    color:#f3e9da; text-shadow:0 1px 5px rgba(0,0,0,.95);
+  }
+  .bol .ring{ position:absolute; inset:0; border-radius:50%; border:2px solid rgba(217,164,65,.9); opacity:0 }
+  .bol.tap .ring{ animation:bolRing .62s ease-out }
+  @keyframes bolRing{ 0%{ transform:scale(.22); opacity:.95 } 100%{ transform:scale(1.06); opacity:0 } }
+
+  /* the matra ring */
+  .matra{
+    transform-box:fill-box; transform-origin:center;
+    transition:transform .26s cubic-bezier(.22,1,.36,1), fill .26s ease, opacity .26s ease;
+  }
+  .matra.on{ transform:scale(1.9) }
+  #taalHand{ transform-origin:100px 100px; transition:transform .2s cubic-bezier(.3,1.35,.5,1) }
+  #taalRing.idle #taalHand{ opacity:.25 }
 </style>
 
 <script type="application/ld+json">
@@ -663,6 +807,7 @@
   <div id="stageGlow" aria-hidden="true"></div>
 
   <canvas id="fxCanvas"></canvas>
+  <div id="swarField" aria-hidden="true"></div>
   <div id="flash"></div>
   <div id="warmWash"></div>
   <div id="coolWash"></div>
@@ -681,6 +826,7 @@
       </div>
       <nav aria-label="Primary" class="flex items-center gap-2 justify-end shrink-0">
         <a href="#mehfil"   class="pill hidden xs:inline-flex">महफ़िल</a>
+        <a href="#saaz"     class="pill hidden md:inline-flex">साज़</a>
         <a href="#ustaad"   class="pill hidden sm:inline-flex">उस्ताद</a>
         <a href="#sawaal"   class="pill">सवाल</a>
       </nav>
@@ -741,7 +887,9 @@
         </button>
         <div class="meta">
           <div class="title-now" id="nowTitle">महफ़िल सज रही है…</div>
-          <p class="station-line" id="stationName">हर दिल अज़ीज़ • ग़ज़ल रेडियो</p>
+          <p class="station-line">
+            <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span id="stationName">हर दिल अज़ीज़ • ग़ज़ल रेडियो</span>
+          </p>
           <div class="bar-row">
             <span id="tNow">0:00</span>
             <div class="bar" id="bar" role="slider" aria-label="Track progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
@@ -763,7 +911,7 @@
         </div>
         <div class="vol">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4Zm-2.5-8.7v2.1a7 7 0 0 1 0 13.2v2.1a9 9 0 0 0 0-17.4Z"/></svg>
-          <input id="volume" type="range" min="0" max="100" value="80" aria-label="आवाज़">
+          <input id="volume" class="rng" type="range" min="0" max="100" value="80" aria-label="आवाज़">
         </div>
       </section>
 
@@ -792,20 +940,95 @@
     </p>
 
     <div class="grid sm:grid-cols-3 gap-4 mt-10">
-      <div class="rounded-2xl border border-[#d9a441]/18 bg-[#160f26]/70 p-5">
+      <div data-reveal class="rounded-2xl border border-[#d9a441]/18 bg-[#160f26]/70 p-5">
         <div class="text-2xl mb-2" aria-hidden="true">🌧️</div>
         <h3 class="f-deva text-xl text-[#f5ecdd] mb-1.5">तीन मिज़ाज</h3>
         <p class="text-sm leading-relaxed text-[#f3e9da]/58">बरसात, शमा और चाँदनी — तीनों मौसम एक क्लिक पर। हर एक की अपनी रौशनी और अपनी आवाज़ है।</p>
       </div>
-      <div class="rounded-2xl border border-[#d9a441]/18 bg-[#160f26]/70 p-5">
-        <div class="text-2xl mb-2" aria-hidden="true">🎵</div>
-        <h3 class="f-deva text-xl text-[#f5ecdd] mb-1.5">तानपूरा</h3>
-        <p class="text-sm leading-relaxed text-[#f3e9da]/58">पीछे चलता हुआ हल्का सा सुर, जो ग़ज़ल के नीचे बिछ जाता है। ब्राउज़र में ही बनता है, कोई फ़ाइल नहीं।</p>
+      <div data-reveal class="rounded-2xl border border-[#d9a441]/18 bg-[#160f26]/70 p-5">
+        <div class="text-2xl mb-2" aria-hidden="true">🎹</div>
+        <h3 class="f-deva text-xl text-[#f5ecdd] mb-1.5">साज़</h3>
+        <p class="text-sm leading-relaxed text-[#f3e9da]/58">हारमोनियम की पूरी पट्टी, तबले के बोल और ताल — नीचे रखे हैं, बजाकर देखिए।</p>
       </div>
-      <div class="rounded-2xl border border-[#d9a441]/18 bg-[#160f26]/70 p-5">
+      <div data-reveal class="rounded-2xl border border-[#d9a441]/18 bg-[#160f26]/70 p-5">
         <div class="text-2xl mb-2" aria-hidden="true">👏</div>
         <h3 class="f-deva text-xl text-[#f5ecdd] mb-1.5">वाह वाह</h3>
         <p class="text-sm leading-relaxed text-[#f3e9da]/58">अच्छा शेर आए तो दाद दीजिए। स्क्रीन पर वाही उड़ेगी जो असली महफ़िल में उड़ती है।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SAAZ — the instruments ============================ -->
+<section id="saaz" class="relative overflow-hidden bg-[#0a0713] px-5 sm:px-8 py-16 sm:py-24 border-t border-white/5">
+  <div class="saaz-halo" aria-hidden="true"></div>
+
+  <div class="relative max-w-5xl mx-auto">
+    <p data-reveal class="f-urdu text-lg text-[#d9a441]/80 mb-3 text-left" dir="rtl">ساز اٹھائیے</p>
+    <h2 data-reveal class="f-deva text-4xl sm:text-5xl text-[#f5ecdd] mb-3">साज़ उठाइए</h2>
+    <p data-reveal class="f-serif text-base sm:text-lg leading-relaxed text-[#f3e9da]/60 max-w-2xl mb-9">
+      ग़ज़ल सुनते-सुनते हाथ ख़ुद सुर ढूँढने लगते हैं। ये हारमोनियम, ये तबला और ये ताल — तीनों इसी पेज के अंदर
+      बनते हैं, कोई फ़ाइल नहीं उतरती। तानपूरे के साथ मिलाकर बजाइए, सुर वहीं मिलेगा।
+    </p>
+
+    <!-- harmonium -->
+    <div data-reveal class="panel">
+      <div class="flex items-end justify-between gap-3 mb-4 flex-wrap">
+        <div>
+          <h3 class="f-deva text-2xl sm:text-3xl text-[#f5ecdd] leading-tight">हारमोनियम</h3>
+          <p class="text-[11px] tracking-[0.16em] uppercase text-[#d9a441]/55 mt-1">Sa tuned to C&#9839; · same as the tanpura</p>
+        </div>
+        <p class="text-[11px] text-[#f3e9da]/45">दबाकर रखिए<span class="hidden sm:inline"> · कीबोर्ड पर <span class="text-[#d9a441]/80">A S D F G H J K</span> और <span class="text-[#d9a441]/80">W E T Y U</span></span></p>
+      </div>
+
+      <div class="harmo">
+        <div class="harmo-grille" aria-hidden="true"></div>
+        <div class="keys" id="keys" role="group" aria-label="हारमोनियम की पट्टी"></div>
+      </div>
+
+      <p class="mt-3.5 text-center text-[11px] text-[#f3e9da]/40">
+        अभी बजा: <span id="swarNow" class="f-deva text-base text-[#d9a441]/90 align-middle">—</span>
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+      <!-- tabla -->
+      <div data-reveal class="panel">
+        <h3 class="f-deva text-2xl text-[#f5ecdd] leading-tight">तबला</h3>
+        <p class="text-[11px] text-[#f3e9da]/45 mt-1 mb-5">बोल बजाइए<span class="hidden sm:inline"> · कीबोर्ड पर <span class="text-[#d9a441]/80">1–5</span></span></p>
+        <div class="grid grid-cols-5 gap-1.5 sm:gap-2.5" id="bolPads"></div>
+        <p class="text-[11px] leading-relaxed text-[#f3e9da]/38 mt-5">
+          दायाँ तबला सुर में बोलता है, बायाँ सिर्फ़ गूँजता है — हथेली के दबाव से उसका सुर नीचे फिसलता है।
+          इसीलिए <span class="text-[#f3e9da]/60">धा = ना + गे</span> और <span class="text-[#f3e9da]/60">धिं = तिं + गे</span>, दोनों हाथ एक साथ।
+        </p>
+      </div>
+
+      <!-- taal -->
+      <div data-reveal class="panel">
+        <h3 class="f-deva text-2xl text-[#f5ecdd] leading-tight">ताल</h3>
+        <p class="text-[11px] text-[#f3e9da]/45 mt-1 mb-3">ग़ज़ल की दो जानी-पहचानी तालें। सम सुनहरा, ख़ाली खोखला।</p>
+
+        <svg id="taalRing" class="idle block w-full max-w-[178px] mx-auto" viewBox="0 0 200 200" role="img" aria-label="ताल का चक्र">
+          <circle cx="100" cy="100" r="74" fill="none" stroke="rgba(217,164,65,.16)" stroke-width="1"/>
+          <g id="taalHand">
+            <line x1="100" y1="100" x2="100" y2="36" stroke="rgba(217,164,65,.75)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="100" cy="100" r="3.5" fill="#d9a441"/>
+          </g>
+          <g id="matraDots"></g>
+          <text id="matraLbl" x="100" y="112" text-anchor="middle" font-family="Rozha One, serif"
+                font-size="30" fill="#f5ecdd" opacity=".9">ताल</text>
+        </svg>
+
+        <div class="flex items-center justify-center gap-2 mt-4 flex-wrap">
+          <button id="taalKeherwa" type="button" class="pill" aria-pressed="false">कहरवा <span class="opacity-50">८</span></button>
+          <button id="taalDadra"   type="button" class="pill" aria-pressed="false">दादरा <span class="opacity-50">६</span></button>
+        </div>
+
+        <div class="flex items-center justify-center gap-2.5 mt-4">
+          <span class="text-[11px] text-[#f3e9da]/45 shrink-0">लय</span>
+          <input id="laySlider" class="rng wide" type="range" min="56" max="150" value="96" aria-label="ताल की लय">
+          <span id="layNow" class="text-[10px] font-mono text-[#f3e9da]/45 shrink-0 w-[46px] text-right">96</span>
+        </div>
       </div>
     </div>
   </div>
@@ -918,7 +1141,7 @@ const SHERS = [
     ["फ़रीदा ख़ानम",   "Farida Khanum", "आज जाने की ज़िद न करो"]
   ];
   document.getElementById('ustaadGrid').innerHTML = USTAAD.map(([hi,en,note])=>`
-    <div class="rounded-2xl border border-[#d9a441]/15 bg-[#140d24]/60 p-4 sm:p-5 hover:border-[#d9a441]/45 transition-colors">
+    <div data-reveal class="rounded-2xl border border-[#d9a441]/15 bg-[#140d24]/60 p-4 sm:p-5 hover:border-[#d9a441]/45 transition-colors">
       <h3 class="f-deva text-xl sm:text-2xl text-[#f5ecdd] leading-tight">${hi}</h3>
       <p class="text-[11px] tracking-[0.16em] uppercase text-[#d9a441]/60 mt-1">${en}</p>
       <p class="text-xs text-[#f3e9da]/50 mt-2.5 leading-relaxed">${note}</p>
@@ -931,13 +1154,15 @@ const SHERS = [
      "बरसात में बूँदें, बिजली और गरज आती है। शमा में मोमबत्ती की चिंगारियाँ और गरम रौशनी। चाँदनी में ठंडी नीली धुंध और तैरते हुए ज़र्रे। तीनों की आवाज़ ब्राउज़र में ही बनती है।"],
     ["तानपूरा अलग से क्यों है?",
      "ताकि आप उसे ग़ज़ल के साथ या अकेले, किसी भी मौसम के साथ चला सकें। यह चार तारों का धीमा सुर है जो पीछे बजता रहता है।"],
+    ["हारमोनियम और तबला सच में बजते हैं?",
+     "जी हाँ। कोई रिकॉर्डिंग नहीं — हर सुर और हर बोल आपके ब्राउज़र में उसी वक़्त बनता है। हारमोनियम का सा वही है जो तानपूरे का है (C♯), इसलिए दोनों साथ चलाने पर सुर मिला हुआ मिलेगा। ताल की लय भी धीमी-तेज़ कर सकते हैं।"],
     ["कोई ऐप डाउनलोड करना है?",
      "नहीं। पेज खोलिए, प्ले दबाइए। मोबाइल और डेस्कटॉप दोनों पर चलता है।"],
     ["ग़ज़ल अपने आप अगली चलेगी?",
      "हाँ। एक ग़ज़ल ख़त्म होते ही अगली शुरू हो जाती है, और तरतीब हर बार बदली हुई होती है — जैसे असली महफ़िल में फ़रमाइशें आती हैं।"]
   ];
   document.getElementById('faqList').innerHTML = FAQ.map(([q,a])=>`
-    <details class="group rounded-2xl border border-[#d9a441]/15 bg-[#140d24]/60 px-5 py-4">
+    <details data-reveal class="group rounded-2xl border border-[#d9a441]/15 bg-[#140d24]/60 px-5 py-4">
       <summary class="flex items-center justify-between gap-4 cursor-pointer list-none">
         <span class="f-deva text-lg sm:text-xl text-[#f5ecdd]">${q}</span>
         <svg class="chev w-4 h-4 shrink-0 text-[#d9a441]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
@@ -1641,6 +1866,8 @@ document.addEventListener('keydown', e => {
     if (yt && typeof yt.pauseVideo === 'function') yt.pauseVideo();
     Ambience.set(Ambience.current());          // toggling the live mode turns it off
     if (Tanpura.isOn()) Tanpura.toggle();
+    Taal.stop();
+    Saaz.releaseAll();
     document.querySelectorAll('#fxRain,#fxShama,#fxChandni,#fxDrone')
       .forEach(b => { b.classList.remove('on'); b.setAttribute('aria-pressed','false'); });
     $('nowTitle').textContent = 'महफ़िल बरख़ास्त — शब बख़ैर';
@@ -1676,6 +1903,386 @@ document.addEventListener('keydown', e => {
     const m = Math.floor(s / 60);
     el.textContent = m ? (m + ' मिनट') : (s + ' सेकंड');
   }, 1000);
+})();
+
+
+/* =========================================================================
+   11. SAAZ — harmonium reeds and tabla bols, synthesised in the browser
+   ========================================================================= */
+const Saaz = (function(){
+  const SA = 277.18;                 // C#4 — the key the tanpura is already tuned to
+  const held = new Map();
+
+  /* ---- harmonium: a reed that keeps sounding as long as you hold it ---- */
+  function press(id, semi){
+    if (held.has(id)) return;
+    const ctx = AudioBus.get(); if (!ctx) return;
+    const t = ctx.currentTime;
+    const f = SA * Math.pow(2, semi / 12);
+
+    const g  = ctx.createGain();
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 2500; lp.Q.value = 0.9;
+    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 150;
+
+    // a harmonium reed is really two voices a few cents apart, beating against each other
+    const oscs = [[1,-7,'sawtooth',.5],[1,7,'sawtooth',.5],[2,0,'triangle',.18],[3,5,'triangle',.07]]
+      .map(([mul, cents, type, amp]) => {
+        const o = ctx.createOscillator(), og = ctx.createGain();
+        o.type = type; o.frequency.value = f * mul; o.detune.value = cents;
+        og.gain.value = amp;
+        o.connect(og); og.connect(lp); o.start(t);
+        return o;
+      });
+
+    // the bellows never sit perfectly still
+    const lfo = ctx.createOscillator(), lfoG = ctx.createGain();
+    lfo.frequency.value = 4.6; lfoG.gain.value = f * 0.0035;
+    lfo.connect(lfoG); oscs.forEach(o => lfoG.connect(o.frequency)); lfo.start(t);
+
+    lp.connect(hp); hp.connect(g); g.connect(AudioBus.out());
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.17, t + 0.055);
+    g.gain.linearRampToValueAtTime(0.13, t + 0.55);
+
+    held.set(id, { oscs, lfo, g });
+  }
+
+  function release(id){
+    const v = held.get(id); if (!v) return;
+    held.delete(id);
+    const ctx = AudioBus.get(); if (!ctx) return;
+    const t = ctx.currentTime;
+    v.g.gain.cancelScheduledValues(t);
+    v.g.gain.setValueAtTime(Math.max(v.g.gain.value, 0.0001), t);
+    v.g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+    v.oscs.forEach(o => { try { o.stop(t + 0.36); } catch(e){} });
+    try { v.lfo.stop(t + 0.36); } catch(e){}
+  }
+
+  function releaseAll(){ Array.from(held.keys()).forEach(release); }
+
+  /* ---- tabla ---- */
+  function burst(t, freq, q, amp, dur){
+    const ctx = AudioBus.get();
+    const n = Math.max(1, Math.floor(ctx.sampleRate * dur));
+    const b = ctx.createBuffer(1, n, ctx.sampleRate);
+    const d = b.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * dur * 0.22));
+    const s = ctx.createBufferSource(); s.buffer = b;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = q;
+    const g = ctx.createGain(); g.gain.value = amp;
+    s.connect(bp); bp.connect(g); g.connect(AudioBus.out()); s.start(t);
+  }
+
+  // the dayan rings in near-whole harmonics — that is what makes a tabla sing
+  // a pitch instead of just thumping
+  function dayan(t, base, decay, amp){
+    const ctx = AudioBus.get();
+    [[1,1],[2,.5],[3,.26],[4,.13],[5.4,.06]].forEach(([mul, a], i) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = base * mul;
+      const dk = decay * (1 - i * 0.13);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(a * amp, t + 0.004);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dk);
+      o.connect(g); g.connect(AudioBus.out());
+      o.start(t); o.stop(t + dk + 0.05);
+    });
+    burst(t, base * 3.4, 1.4, amp * 0.5, 0.05);
+  }
+
+  // the bayan, bent downward by the heel of the hand
+  function bayan(t, f0, f1, decay, amp){
+    const ctx = AudioBus.get();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(f1, t + decay * 0.55);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(amp, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+    o.connect(g); g.connect(AudioBus.out());
+    o.start(t); o.stop(t + decay + 0.05);
+    burst(t, 190, 0.9, amp * 0.35, 0.06);
+  }
+
+  const BOLS = {
+    na:   t => dayan(t, 330, 0.95, 0.22),
+    tin:  t => dayan(t, 415, 0.80, 0.20),
+    ge:   t => bayan(t, 108, 58, 0.62, 0.34),
+    ke:   t => bayan(t, 120, 88, 0.13, 0.26),
+    dha:  t => { dayan(t, 330, 0.95, 0.21); bayan(t, 108, 58, 0.62, 0.32); },
+    dhin: t => { dayan(t, 415, 0.80, 0.19); bayan(t, 108, 58, 0.58, 0.30); }
+  };
+
+  function bol(name, when){
+    const ctx = AudioBus.get(); if (!ctx) return;
+    (BOLS[name] || BOLS.na)(when || ctx.currentTime);
+  }
+
+  return { press, release, releaseAll, bol };
+})();
+
+
+/* ---- the harmonium keyboard ---- */
+(function harmonium(){
+  //  semitone, sargam, keyboard key, is it a black key
+  const NOTES = [
+    [0,'सा','a',0], [1,'रे॒','w',1], [2,'रे','s',0],  [3,'ग॒','e',1], [4,'ग','d',0],
+    [5,'म','f',0],  [6,'म॑','t',1],  [7,'प','g',0],   [8,'ध॒','y',1], [9,'ध','h',0],
+    [10,'नि॒','u',1],[11,'नि','j',0], [12,'सां','k',0]
+  ];
+  const WHITES = NOTES.filter(n => !n[3]);
+  const wrap = document.getElementById('keys');
+  const swarNow = document.getElementById('swarNow');
+  const byKey = {};
+
+  const html = [];
+  WHITES.forEach(([semi, name, k]) => {
+    html.push('<button class="wkey" type="button" data-semi="' + semi + '" data-name="' + name +
+              '" aria-label="' + name + '">' + name + '</button>');
+  });
+  NOTES.filter(n => n[3]).forEach(([semi, name, k]) => {
+    const left = WHITES.filter(w => w[0] < semi).length * 12.5;
+    html.push('<button class="bkey" type="button" style="left:' + left + '%" data-semi="' + semi +
+              '" data-name="' + name + '" aria-label="' + name + '">' + name + '</button>');
+  });
+  wrap.innerHTML = html.join('');
+
+  wrap.querySelectorAll('[data-semi]').forEach(el => {
+    const semi = el.dataset.semi;
+    byKey[NOTES.find(n => String(n[0]) === semi)[2]] = el;
+  });
+
+  function down(el){
+    if (el.classList.contains('down')) return;
+    el.classList.add('down');
+    Saaz.press(el.dataset.semi, Number(el.dataset.semi));
+    swarNow.textContent = el.dataset.name;
+  }
+  function up(el){
+    if (!el.classList.contains('down')) return;
+    el.classList.remove('down');
+    Saaz.release(el.dataset.semi);
+  }
+
+  wrap.querySelectorAll('[data-semi]').forEach(el => {
+    el.addEventListener('pointerdown', e => { e.preventDefault(); down(el); });
+    el.addEventListener('pointerenter', e => { if (e.buttons === 1) down(el); });
+    ['pointerup','pointerleave','pointercancel'].forEach(ev => el.addEventListener(ev, () => up(el)));
+    el.addEventListener('contextmenu', e => e.preventDefault());
+  });
+  addEventListener('pointerup', () => wrap.querySelectorAll('.down').forEach(up));
+  addEventListener('blur', () => Saaz.releaseAll());
+
+  addEventListener('keydown', e => {
+    if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+    const el = byKey[e.key.toLowerCase()];
+    if (el){ e.preventDefault(); down(el); }
+  });
+  addEventListener('keyup', e => {
+    const el = byKey[e.key.toLowerCase()];
+    if (el) up(el);
+  });
+})();
+
+
+/* ---- the tabla pads ---- */
+(function tabla(){
+  const PADS = [['dha','धा'], ['dhin','धिं'], ['na','ना'], ['tin','तिं'], ['ge','गे']];
+  const wrap = document.getElementById('bolPads');
+
+  wrap.innerHTML = PADS.map(([id, label], i) =>
+    '<button class="bol" type="button" data-bol="' + id + '" aria-label="' + label + '">' +
+      '<span class="syahi" aria-hidden="true"></span>' +
+      '<span class="ring" aria-hidden="true"></span>' +
+      '<span class="lbl">' + label + '</span>' +
+    '</button>').join('');
+
+  const pads = Array.from(wrap.querySelectorAll('.bol'));
+
+  function hit(el){
+    Saaz.bol(el.dataset.bol);
+    el.classList.remove('tap');
+    void el.offsetWidth;                 // restart the ripple even on a fast re-tap
+    el.classList.add('tap');
+  }
+  pads.forEach(el => {
+    el.addEventListener('pointerdown', e => { e.preventDefault(); hit(el); });
+    el.addEventListener('animationend', () => el.classList.remove('tap'));
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.code === 'Space'){ e.preventDefault(); hit(el); }
+    });
+  });
+
+  addEventListener('keydown', e => {
+    const tag = e.target.tagName;
+    if (e.repeat || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+    const n = Number(e.key);
+    if (n >= 1 && n <= pads.length) hit(pads[n - 1]);
+  });
+})();
+
+
+/* =========================================================================
+   12. TAAL — a theka that keeps time, drawn as a turning chakra
+   ========================================================================= */
+const Taal = (function(){
+  const TAALS = {
+    keherwa: { matra:8, khali:4, bols:['dha','ge','na','tin','na','ke','dhin','na'],
+               show:['धा','गे','ना','ती','ना','के','धिं','ना'] },
+    dadra:   { matra:6, khali:3, bols:['dha','dhin','na','dha','tin','na'],
+               show:['धा','धिं','ना','धा','तिं','ना'] }
+  };
+
+  const ring = document.getElementById('taalRing');
+  const hand = document.getElementById('taalHand');
+  const dots = document.getElementById('matraDots');
+  const lbl  = document.getElementById('matraLbl');
+
+  let key = null, idx = 0, nextT = 0, loop = null, bpm = 96, pending = [];
+
+  function drawDots(t){
+    let s = '';
+    for (let i = 0; i < t.matra; i++){
+      const a = (-90 + i * 360 / t.matra) * Math.PI / 180;
+      const x = 100 + Math.cos(a) * 74, y = 100 + Math.sin(a) * 74;
+      const sam = i === 0, khali = i === t.khali;
+      s += '<circle class="matra" data-i="' + i + '" cx="' + x.toFixed(2) + '" cy="' + y.toFixed(2) + '" r="' +
+           (sam ? 5.6 : 4.2) + '" fill="' + (khali ? 'none' : 'rgba(243,233,218,.22)') +
+           '" stroke="' + (sam ? '#d9a441' : khali ? 'rgba(243,233,218,.4)' : 'none') +
+           '" stroke-width="' + (sam || khali ? 1.6 : 0) + '"/>';
+    }
+    dots.innerHTML = s;
+  }
+
+  function light(i, text, turn){
+    dots.querySelectorAll('.matra').forEach(d => {
+      const on = Number(d.dataset.i) === i;
+      d.classList.toggle('on', on);
+      if (on) d.setAttribute('fill', '#d9a441');
+      else if (d.getAttribute('stroke') === 'rgba(243,233,218,.4)') d.setAttribute('fill', 'none');
+      else d.setAttribute('fill', 'rgba(243,233,218,.22)');
+    });
+    lbl.textContent = text;
+    hand.style.transform = 'rotate(' + (turn * 360 / TAALS[key].matra) + 'deg)';
+  }
+
+  function schedule(){
+    const ctx = AudioBus.get(); if (!ctx || !key) return;
+    const t = TAALS[key];
+    while (nextT < ctx.currentTime + 0.18){
+      const i = idx % t.matra, turn = idx;
+      Saaz.bol(t.bols[i], nextT);
+      pending.push(setTimeout(() => light(i, t.show[i], turn),
+                              Math.max(0, (nextT - ctx.currentTime) * 1000)));
+      nextT += 60 / bpm;
+      idx++;
+    }
+    if (pending.length > 40) pending = pending.slice(-20);
+    loop = setTimeout(schedule, 45);
+  }
+
+  function stop(){
+    key = null;
+    clearTimeout(loop); loop = null;
+    pending.forEach(clearTimeout); pending = [];
+    dots.querySelectorAll('.matra').forEach(d => {
+      d.classList.remove('on');
+      d.setAttribute('fill', d.getAttribute('stroke') === 'rgba(243,233,218,.4)' ? 'none' : 'rgba(243,233,218,.22)');
+    });
+    lbl.textContent = 'ताल';
+    ring.classList.add('idle');
+    sync();
+  }
+
+  function start(k){
+    if (key === k){ stop(); return; }
+    const ctx = AudioBus.get(); if (!ctx) return;
+    clearTimeout(loop);
+    pending.forEach(clearTimeout); pending = [];
+    key = k; idx = 0;
+    nextT = ctx.currentTime + 0.1;
+    drawDots(TAALS[k]);
+    ring.classList.remove('idle');
+    sync();
+    schedule();
+  }
+
+  function sync(){
+    [['taalKeherwa','keherwa'], ['taalDadra','dadra']].forEach(([id, k]) => {
+      const b = document.getElementById(id);
+      b.classList.toggle('on', key === k);
+      b.setAttribute('aria-pressed', String(key === k));
+    });
+  }
+
+  drawDots(TAALS.keherwa);
+  document.getElementById('taalKeherwa').addEventListener('click', () => start('keherwa'));
+  document.getElementById('taalDadra').addEventListener('click', () => start('dadra'));
+
+  const lay = document.getElementById('laySlider'), layNow = document.getElementById('layNow');
+  function applyLay(){
+    bpm = Number(lay.value);
+    lay.style.setProperty('--pct', ((bpm - 56) / (150 - 56) * 100) + '%');
+    layNow.textContent = bpm;
+  }
+  lay.addEventListener('input', applyLay);
+  applyLay();
+
+  return { stop, isOn: () => !!key };
+})();
+
+
+/* =========================================================================
+   13. SARGAM DRIFTING UP WHILE A GHAZAL PLAYS
+   ========================================================================= */
+(function swarRain(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const field = document.getElementById('swarField');
+  const GLYPHS = ['सा','रे','ग','म','प','ध','नि','♪','♫'];
+
+  setInterval(() => {
+    if (document.hidden) return;
+    if (!document.body.classList.contains('is-playing')) return;
+    if (field.childElementCount > 14) return;
+
+    const el = document.createElement('span');
+    const dur = 9 + Math.random() * 6;
+    el.className = 'swar';
+    el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+    el.style.left = (6 + Math.random() * 86) + 'vw';
+    el.style.fontSize = (15 + Math.random() * 26) + 'px';
+    el.style.setProperty('--dx',  ((Math.random() - .5) * 140).toFixed(0) + 'px');
+    el.style.setProperty('--rot', ((Math.random() - .5) * 40).toFixed(0) + 'deg');
+    el.style.setProperty('--dur', dur + 's');
+    field.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000 + 250);
+  }, 1700);
+})();
+
+
+/* =========================================================================
+   14. SECTIONS EASE IN AS YOU SCROLL
+   ========================================================================= */
+(function reveal(){
+  const els = Array.from(document.querySelectorAll('[data-reveal]'));
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const sibs = Array.from(e.target.parentElement.children).filter(c => c.hasAttribute('data-reveal'));
+      e.target.style.transitionDelay = Math.min(sibs.indexOf(e.target), 5) * 90 + 'ms';
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  els.forEach(el => io.observe(el));
 })();
 </script>
 </body>
