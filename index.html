@@ -9,7 +9,7 @@
 <meta name="description" content="Shab-e-Ghazal is a browser mehfil for ghazal lovers. Play Jagjit Singh, Mehdi Hassan, Ghulam Ali and Begum Akhtar with rain, candlelight and tanpura ambience.">
 <meta name="keywords" content="ghazal, gazal, ghazal radio, urdu ghazal, jagjit singh ghazals, mehdi hassan, ghulam ali, begum akhtar, pankaj udhas, mehfil, shayari, sher, ghazal playlist, ghazal website">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="author" content="Shab-e-Ghazal">
+<meta name="author" content="Monis Raza">
 <link rel="canonical" href="https://monis115.github.io/gazal/">
 
 <meta property="og:type" content="website">
@@ -72,6 +72,18 @@
   select.pill option{ background:#160f26; color:#f3e9da }
   .sel-wrap{ position:relative; display:inline-block }
   .sel-wrap svg{ position:absolute; right:9px; top:50%; transform:translateY(-50%); width:11px; height:11px; color:var(--gold); pointer-events:none }
+
+  .social{
+    width:40px; height:40px; border-radius:9999px; display:inline-flex; align-items:center; justify-content:center;
+    background:rgba(20,13,36,.7); border:1px solid rgba(217,164,65,.3); color:rgba(243,233,218,.7);
+    transition:all .22s cubic-bezier(.4,0,.2,1);
+  }
+  .social svg{ width:17px; height:17px; fill:currentColor }
+  .social:hover{
+    background:rgba(122,31,61,.55); border-color:rgba(217,164,65,.85); color:#f7e3b8;
+    transform:translateY(-2px); box-shadow:0 0 20px rgba(217,164,65,.3);
+  }
+  .social:focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
 
   /* ---------- ambience layers ---------- */
   #fxCanvas{ position:fixed; inset:0; width:100vw; height:100vh; pointer-events:none; z-index:15; opacity:0; transition:opacity .9s ease-in-out }
@@ -162,7 +174,15 @@
   "name":"Shab-e-Ghazal",
   "url":"https://monis115.github.io/gazal/",
   "description":"A browser mehfil for ghazal lovers — continuous Urdu ghazals with rain, candlelight and tanpura ambience.",
-  "inLanguage":["hi","ur","en"]
+  "inLanguage":["hi","ur","en"],
+  "author":{
+    "@type":"Person",
+    "name":"Monis Raza",
+    "sameAs":[
+      "https://www.linkedin.com/in/monis-r-0552b715a/",
+      "https://www.instagram.com/monis___raza___/"
+    ]
+  }
 }
 </script>
 </head>
@@ -574,7 +594,22 @@
 <footer class="bg-[#070511] border-t border-white/5 px-5 sm:px-8 py-10 text-center">
   <p class="f-urdu text-base text-[#d9a441]/70 mb-3" dir="rtl">شبِ غزل</p>
   <p class="text-xs text-[#f3e9da]/35">शब-ए-ग़ज़ल · उर्दू ग़ज़ल रेडियो · महफ़िल जो ख़त्म नहीं होती</p>
-  <p class="text-[10px] text-[#f3e9da]/22 mt-3 max-w-lg mx-auto leading-relaxed">
+
+  <!-- who set this mehfil up -->
+  <div class="glowline w-24 mx-auto my-6"></div>
+  <p class="text-[11px] text-[#f3e9da]/40 mb-3">महफ़िल सजाई — <span class="f-deva text-base text-[#d9a441]/85">मोनिस रज़ा</span></p>
+  <div class="flex items-center justify-center gap-3">
+    <a href="https://www.linkedin.com/in/monis-r-0552b715a/" target="_blank" rel="noopener noreferrer"
+       class="social" aria-label="Monis Raza on LinkedIn">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.5 4.78 5.75V21h-4v-5.6c0-1.34-.03-3.06-1.9-3.06-1.9 0-2.2 1.45-2.2 2.96V21h-4V9Z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/monis___raza___/" target="_blank" rel="noopener noreferrer"
+       class="social" aria-label="Monis Raza on Instagram">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 3.68a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32Zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0Z"/></svg>
+    </a>
+  </div>
+
+  <p class="text-[10px] text-[#f3e9da]/22 mt-6 max-w-lg mx-auto leading-relaxed">
     संगीत YouTube के ज़रिए चलता है और उसके मालिक अपने-अपने कलाकारों व लेबल के पास है।
     यह पेज सिर्फ़ सुनने का माहौल बनाता है।
   </p>
